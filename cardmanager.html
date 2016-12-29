@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.3.js" ></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+    <style>
+    	.contentleft li{
+    		display: block;
+    		padding:5px 20px;
+    		display: -webkit-box;
+    	}
+    	.content{display: -webkit-box;}
+    	.contentleft{
+    		width:80%;
+    	}
+    	.contentright{
+    		width:20%;
+    		-webkit-box-flex: 1;
+    		text-align: center;
+    	}
+    	.contentright span{display:block;margin:50px 15px;font-size: 1.1em;}
+    	.mui-card{margin-top:55px;}
+    </style>
+</head>
+<body>
+	
+	<header id="header" class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">卡片管理</h1>
+		<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right save-info">添加</button>
+	</header>
+	
+	<div class="mui-card">
+		<!--页眉，放置标题-->
+		<div class="mui-card-header">
+			<span>长期卡-包月卡</span>
+			<span style="font-size: 15px;">NO:123456789</span>
+		</div>
+		<!--内容区-->
+		<div class="mui-card-content">
+			<div class="content">
+				<div class="contentleft">
+					<li><span>持&ensp;有&ensp;人:张晓军</span> </li>
+					<li><span>联系方式:18268111111</span></li>
+					<li><span>开卡时间:2016年3月6日</span></li>
+					<li><span>卡片余额:138.0元</span></li>
+					<input type="hidden" value="1" />
+				</div>
+				<div class="contentright">
+					<span >正常</span>
+				</div>
+			</div>
+			
+		</div>
+		<!--页脚，放置补充信息或支持的操作-->
+		<div class="mui-card-footer" style="text-align: center;">
+			<div style="width: 100%;">
+				<button type="button" class="mui-btn mui-btn-primary" name="1" onclick="cardManager(this)"/>管理</button>
+			</div>
+		</div>
+	</div>
+	
+	<div id="sheet1" class="mui-popover mui-popover-bottom mui-popover-action ">
+	    <!-- 可选择菜单 -->
+	    <ul class="mui-table-view">
+	        <li class="mui-table-view-cell">
+				<a href="javascript:guashi()">挂失</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a href="javascript:bandcarno()">绑定车牌/解除绑定</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a href="javascript:zhangdan()">账单记录</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a style="color: #FF3B30;" href="javascript:deletethis()">删除</a>
+			</li>
+	    </ul>
+	    <!-- 取消菜单 -->
+	    <ul class="mui-table-view">
+	      <li class="mui-table-view-cell">
+	        <a href="#sheet1"><b>取消</b></a>
+	      </li>
+	    </ul>
+	</div>
+	
+	
+	
+</body>
+</html>
+<script>
+	function l(obj){
+		console.log(obj);
+	}
+
+	function cardManager(thisdiv){
+		mui('#sheet1').popover('toggle');
+	}
+	
+	function guashi(){
+		mui.confirm("","是否确认要挂失？",["否","是"],function(e){
+			if(e.index==1){
+				l("挂失");				
+			}else{
+				l("不挂失");
+			}
+		});
+		mui('#sheet1').popover('toggle');
+	}
+	
+	function bandcarno(){
+		var state = 1;
+		if(state==1){// 已绑定
+			mui.confirm("","是否解除要绑定的车牌？",["否","是"],function(e){
+				if(e.index==1){
+					l("解绑");				
+				}else{
+					l("不解绑");
+				}
+			});
+		}else{
+			l("跳转到绑定车牌页");
+		}
+		mui('#sheet1').popover('toggle');
+	}
+	
+	function zhangdan(){
+		l("跳转到账单记录页面");
+		mui('#sheet1').popover('toggle');
+		location.href = "cardrecordlist.html"
+	}
+	
+	function deletethis(){
+		l("delete this");
+		mui('#sheet1').popover('toggle');
+	}
+</script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <link rel="stylesheet" type="text/css" href="css/order-detail.css"/>
+		<title>订单详情</title>
+	</head>
+	
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
+			<h1 class="mui-title inquery-title">订单详情</h1>
+		</header>
+		<div class="mui-content">
+			
+		</div>
+		<nav class="mui-bar mui-bar-tab foot-info foot-pay">
+			<div class="current-debt">缴费后请在15分钟内离场</div>
+			<a href="payment.html" class="mui-pull-right go-btn">支付</a>
+		</nav>
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/order-detail.js"></script>
+		<script type="text/html" id="orderInfo">
+			<div class="mui-card">
+				<div class="mui-card-header">
+					<p><span>车&ensp;牌&ensp;号: {{car}}</span></p>
+					<p><span>停&ensp;车&ensp;场: {{position}}</span></p>
+					<p><span>车&ensp;位&ensp;号: {{num}}</span></p>
+				</div>
+				<div class="mui-card-content">
+					<div class="content">
+						<div class="contentleft">
+							<li><span>入场时间: {{date}}</span></li>
+							<li><span>停放时长: {{time}}</span></li>
+							<li><span>停&ensp;车&ensp;费: <span class="red-price">{{price}}</span></span></li>
+							<li><span>已&ensp;缴&ensp;费: <span class="red-price">{{yetPay}}</span></span></li>
+						</div>
+					</div>
+				</div>
+				<div class="mui-card-footer">
+					应付金额: <span class="red-price big-red">{{pay}}</span>
+				</div>
+			</div>
+		</script>
+
+	</body>
+</html>
+

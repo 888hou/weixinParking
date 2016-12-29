@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/base.js"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=44baf09306cf1cb1f5cd73c1c7a49ca4"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<title>泊位分布</title>
+	</head>
+	<body id="body">
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item " name="item1" href="#item1">
+						车场列表
+					</a>
+					<a class="mui-control-item mui-active" name="item2" href="#item2">
+						泊位地图
+					</a>
+				</div>
+			</div>
+			<div class="">
+				<div id="item1" name="item1" class="mui-control-content ">
+					<div class="mui-content">
+						<div class="mui-content-padded" style="margin: 5px;">
+							<div class="mui-input-row mui-search" style="height:40px;margin-left:1%;">
+							    <input id="searchinput" type="search" class="mui-input-clear" placeholder="">
+							</div>
+						</div>
+						<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed" id="areaList">
+						</ul>
+					</div>	
+				</div>
+				
+				<div id="item2" name="item2" class="mui-control-content mui-active">
+					<div class="mui-content">
+						<div class="mui-content-padded" style="margin: 5px;">
+							<!--泊位分布图-->
+							<div class="map" >
+					            <div id="container" style="width: 100%; height:100%;border: 1px solid #007aff;">
+					                <div class="map_li" style="z-index:100">
+					                
+					                </div>
+					            </div>
+						    </div>
+						</div>
+						
+					</div>	
+				</div>
+			</div>
+		
+	    
+	</body>
+</html>
+
+<script src="js/map.js"></script>
+<script>
+	$(function(){
+		//地图容器高度
+		$("#container").height(getWindowSize().y-70)
+		
+		$("#seachinput").click(function(){
+			$("#seachinput").addClass("mui-active")
+		})
+		
+		$("#searchinput").bind("input propertychange",function(){
+			var value =
+			$.each($("[name='parkinglotname']"),function(){
+				if($(this).text().indexOf($("#searchinput").val())>=0){
+					$(this).parent().parent().parent().parent().parent("li").show();
+				}else{
+					$(this).parent().parent().parent().parent().parent("li").hide();
+				}
+			})
+		});
+		
+		getAreaData();
+		
+	})
+	
+	
+	function getAreaData(){	
+  		$.ajax({
+		   type: "POST",
+		   url: basePath + "parkinglot/getParkinglot.do",
+		   dataType: 'json',
+		   async:true,
+		   success: function(data){
+		   		var pls=data.data;
+		   		setMark(pls);
+		   		
+		   		var html="";	
+		   		$.each(pls,function(index,item){
+		   			var total = item.total;
+		   			var remain = item.remain;
+		   			var name = item.name;
+		   			var maplevel = 18;
+		   			if(typeof(item.name)=="string" && item.name.length>=10){
+		   				name = name.substring(0,10)+"…";
+		   			}
+                    html+=''+
+                    	  '<li class="mui-table-view-cell" onclick="toMap('+maplevel+',['+item.lon+','+item.lat+'])">'+
+							'	<div class="mui-slider-cell">'+
+							'		<div class="oa-contact-cell mui-table">'+
+							'			<div class="oa-contact-content mui-table-cell">'+
+							'				<div class="mui-clearfix">'+
+							'					<h4 class="oa-contact-name" name="parkinglotname">'+name+'</h4>'+
+							'					<span class="oa-contact-position mui-h6">余位：'+remain+'</span>'+
+							'				</div>'+
+							'				<p>地址：萧山机场东面A区域</p>'+
+							'			</div>'+
+							'		</div>'+
+							'	</div>'+
+						'	</li>';
+		   		});
+		   		$("#areaList").html(html);
+		   }
+		});
+	}
+	
+	function toMap(maplevel,lonlat){
+		$("[name='item1']").removeClass("mui-active");
+		$("[name='item2']").addClass("mui-active");
+		map.setZoomAndCenter(maplevel,lonlat)
+	}
+</script>
+
+<script>
+	
+	function getWindowSize() {
+		 var client = {
+			 x:0,
+			 y:0
+		 };
+		 if(typeof document.compatMode != 'undefined' && document.compatMode == 'CSS1Compat') {
+			 client.x = document.documentElement.clientWidth;
+			 client.y = document.documentElement.clientHeight;
+		 } else if(typeof document.body != 'undefined' && (document.body.scrollLeft || document.body.scrollTop)) {
+			 client.x = document.body.clientWidth;
+			 client.y = document.body.clientHeight;
+		 }
+		 return client;
+	}
+
+	function getsize(){
+		 var size = getWindowSize();
+		 document.getElementById("width").value = size.x;
+		 document.getElementById("height").value = size.y;
+	}
+</script>

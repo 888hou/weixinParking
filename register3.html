@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>填写个人密码</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/register.css" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<form id='register-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label>登录密码</label>
+					<input id="regPw" type="password" class="mui-input mui-input-password" placeholder="请输入登录密码" maxlength="20">
+				</div>
+				<div class="mui-input-row">
+					<label>确认密码</label>
+					<input id="regPw2" type="password" class="mui-input-clear mui-input" placeholder="请再次输入密码" maxlength="20">
+				</div>
+			</form>
+			<br />
+			<div class="per-info">
+				<p>&nbsp;&nbsp;个人信息</p>
+				<form id='info-form' class="mui-input-group">
+					<div class="mui-input-row">
+						<label>昵&emsp;&emsp;称</label>
+						<input id="name" type="text" class="mui-input-clear mui-input" placeholder="请输入昵称">
+						<span style="color: red;width: 35px;text-align: center;">*</span>
+					</div>
+					<div class="mui-input-row sexy-reg">
+						<label>性&emsp;&emsp;别</label>
+						<div class="mui-pull-right sexy">
+			            	<label for="" class="sexy-item active male"><span class="sexy-dot"></span><span class="sexy-name">先生</span></label>
+			            	<label for="" class="sexy-item female"><span class="sexy-dot"></span><span class="sexy-name">女士</span></label>
+			            </div>
+					</div>
+					<div class="mui-input-row mui-block">
+						<li class="mui-table-view-cell date-pick mui-list-unstyled">
+			                <a class="mui-navigate-right">
+			                    <span class="mui-badge mui-badge-warning selected-date">2016-01-01</span>
+			                                                  出生日期
+			                </a>
+			            </li>
+					</div>
+				</form>
+			</div>
+			<div class="mui-content-padded">
+				<button id="register" class="mui-btn mui-btn-block mui-btn-primary">注册</button>
+				<p class="goon">继续操作即视为已阅读并同意<a href="user-agreement.html">《用户协议》</a></p>
+			</div>
+			
+		</div>
+		
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.picker.min.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+			mui.init();
+			$(function() {
+				var action = GetQueryString('action');
+				if (action == 'forget') {
+					$('title').html('重置密码');
+					$('.mui-title').html('重置密码');
+					$('#register').html('重置密码');
+				} else {
+					$('.per-info').show();
+					$('.goon').show();
+				}
+				//初始化日期选择器
+				var dtPicker = new mui.DtPicker({
+		    		type: 'date',
+		    		beginDate: new Date(1900, 01, 01)
+		    	});
+		    	
+		    	//性别选取
+		    	$('.sexy').on('tap','label',function(){
+					$('.sexy label').removeClass('active');
+					$(this).addClass('active');
+				})
+		    	
+		    	//选择日期并赋值
+		    	$('.date-pick').on('tap',function() {
+		    		dtPicker.show(function (selectItems) { 
+				        $('.selected-date').html(selectItems.y.value+'-'+selectItems.m.value+'-'+selectItems.d.value);
+				    })
+		    	})
+				//注册
+				$('#register').on('tap',function() {
+					checkRegPw(action);
+				})
+			})
+			
+			function checkRegPw(action) {
+				var pw = $('#regPw').val();
+				var pw2 = $('#regPw2').val();
+				var name = $('#name').val();
+				var reg = /\d+/;
+				var reg2 = /[a-zA-Z]+/;
+
+				if (pw == '') {
+					mui.toast('密码不能为空');
+					return;
+				} else if (pw.length < 6 || !pw.match(reg) || !pw.match(reg2)) {
+					mui.toast('密码长度必须为6-12位，密码需同时包含字母和数字');
+					return;
+				} else if (pw2 !== pw) {
+					mui.toast('两次输入密码不一致');
+					return;
+				} 
+				if (action == 'forget') {
+					resetPw();
+				} else {
+					if (name == '') {
+						mui.toast('昵称不能为空');
+					} else{
+						//进行注册
+						register();
+					}
+				}
+			}
+			
+			//注册
+			function register() {
+				var phone = getCookie('tempPhone');
+				var code = getCookie('smsCode');
+				var pw = $('#regPw2').val();
+				var name = $('#name').val();
+				var sex = $('.sexy .active .sexy-name').html();
+				if (sex == '先生') {
+					sex = 1;
+				} else {
+					sex = 0;
+				}
+				var birthday = $('.selected-date').html();
+				$.post(basePath+'pub/app/register.do',{
+					loginname: phone,
+					smsCode: code,
+					password: pw,
+					name: name,
+					gender: sex,
+					birthday: birthday
+				},function(res) {
+					if (res.errno == '200') {
+						$('#register').html('注册成功&emsp;跳转登录...');
+						setTimeout(function() {
+							mui.openWindow({
+								url: 'login.html',
+								id: 'login.html'
+							})
+						},500);
+					} else {
+						mui.toast(res.errtext);
+					}
+				})
+			}
+			
+			//重置密码
+			function resetPw() {
+				var phone1 = getCookie('tempPhone');
+				var code = getCookie('smsCode');
+				var pw = $('#regPw2').val();
+				console.log('code:'+code+'phone1:'+ phone1+'pw:'+pw)
+				$.post(basePath+'pub/app/resetpwd/phone/'+phone1+'.do',{
+					phone: phone1,
+					smsCode: code,
+					password: pw
+				},function(res) {
+					if (res.errno == '200') {
+						$('#register').html('重置密码成功&emsp;跳转登录...');
+						setTimeout(function() {
+							mui.openWindow({
+								url: 'login.html',
+								id: 'login.html'
+							})
+						},500);
+					} else {
+						mui.toast(res.errtext);
+					}
+				})
+			}
+		</script>
+	</body>
+</html>

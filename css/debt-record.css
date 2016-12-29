@@ -1,0 +1,103 @@
+.mui-content{
+	position: absolute;
+	top: 0px;
+	bottom: 60px;
+	overflow: hidden;
+	width: 100%;
+	padding:0;
+}
+.mui-bar-nav~.mui-content{
+	padding-top: 0;
+}
+.contentleft li {
+	display: block;
+	padding: 5px 20px;
+	padding-right: 0px;
+	display: -webkit-box;
+}
+
+.contentleft {
+	width: 85%;
+}
+
+.content-right {
+	width: 15%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.foot-info {
+	visibility: hidden;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+.current-debt {
+	flex: 1;
+	padding-left: 15px;
+	line-height: 50px;
+}
+
+.go-btn {
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	width: 30%;
+	background-color: #007aff;
+	text-align: center;
+	font-weight: bold;
+	color: #fff;
+}
+
+label {
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.mui-checkbox input[type=checkbox],
+.mui-radio input[type=radio] {
+	position: static;
+}
+
+.mui-bar-tab{
+	height: 60px;
+}
+
+.current-debt{
+	line-height: 15px;
+	padding-top: 5px;
+}
+
+p{
+	margin-bottom: 0px;
+	line-height: 24px;
+	color: #000;
+}
+.pay-price{
+	font-size: 25px;
+	margin-top: 5px;
+}
+
+.be-red{
+	font-size: 18px;
+	color: red;
+}
+
+h3{
+	font-size: 18px;
+    padding: 15px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.mui-pull-bottom-pocket{
+	visibility: visible;
+}

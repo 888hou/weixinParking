@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>个人中心</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.go(-1)"></a>
+			<h1 class="mui-title">消息中心</h1>
+		</header>
+		<div class="mui-iframe-wrapper" style="top: 45px; bottom: 0px;">
+			<iframe src="message-list.html" id="message-list.html" name="message-list.html"></iframe>
+		</div>
+		
+		<script src="js/mui.min.js"></script>
+		<script>
+			//启用双击监听
+			mui.init({
+				gestureConfig:{
+					doubletap:true
+				},
+				subpages:[{
+					url:'message-list.html',
+					id:'message-list.html',
+					styles:{
+						top: '45px',
+						bottom: '0px',
+					}
+				}]
+			});
+			
+			//双击返回顶部
+			var contentWebview = null;
+			document.querySelector('header').addEventListener('doubletap',function () {
+				if(contentWebview==null){
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+			});
+	
+		</script>
+
+	</body>
+
+</html>

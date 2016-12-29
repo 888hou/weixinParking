@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.min.js"></script>
+	    <script type="text/javascript" src="js/jquery-1.11.3.js" ></script>
+	    <script src="js/base.js"></script>
+	    <script src="js/login.js"></script>
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <script type="text/javascript" charset="utf-8">
+	      	mui.init();
+	    </script>
+		<title></title>
+	</head>
+	<style type="text/css">
+	</style>
+	
+	<body>
+		<div class="mui-card">
+			<ul class="mui-table-view"> 
+		        <li class="mui-table-view-cell mui-collapse mui-active">
+		            <a class="mui-navigate-right" href="#">已关联车牌号</a>
+		            <div class="mui-collapse-content">
+		                <ul id="carnolist" class="mui-table-view">
+		                	<!-- 
+						   <li class="mui-table-view-cell mui-transitioning">
+								<div class="mui-slider-right mui-disabled">
+									<a onclick="deletethis(this)" class="mui-btn mui-btn-red" style="transform: translate(0px, 0px);">删除</a>
+								</div>
+								<div class="mui-slider-handle" style="transform: translate(0px, 0px);">
+									浙A32458
+								</div>
+							</li>
+							 -->
+						</ul>
+		            </div>
+		        </li>
+		    </ul>
+		</div>
+		
+		<div class="mui-card">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<input id="inputcarno" type="text" class="mui-input-clear" placeholder="车牌号" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+				</div>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary" onclick="addcarno()">确认</button>&nbsp;&nbsp;
+				</div>
+			</form>
+		</div>
+		
+	</body>
+</html>
+
+<script type="text/javascript">
+	$(function(){
+		setHtml();
+	})
+	
+	var carnos = [];
+	function setHtml(){
+		var user = getUserInfo();
+		if(user!=null)
+			carnos = user.carno.split(",");
+		buildHtml();
+		
+	}
+	
+	function buildHtml(){
+		$("#carnolist").empty();
+		$.each(carnos,function(index,item){
+			if(item.trim()!=""){
+				var html = ' <li class="mui-table-view-cell mui-transitioning">'+
+						   '  	<div class="mui-slider-right mui-disabled">'+
+						   '		<a onclick="deletethis(this)" class="mui-btn mui-btn-red" style="transform: translate(0px, 0px);">删除</a>'+
+							'	</div>'+
+							'	<div class="mui-slider-handle" style="transform: translate(0px, 0px);">'+
+							'		'+item+
+							'	</div>'+
+							'</li>';
+				$("#carnolist").prepend(html);
+			}
+		});	
+	}
+	
+	function addcarno(){
+		var carno = $("#inputcarno").val();
+		if(checkPlate(carno)){
+			$.ajax({
+	            url: basePath+"licensePlate/add.do",
+	            type: 'post',
+	            async: false,
+	            data: { "plateno": carno},
+	            success: function (ResultData) {
+	                if(ResultData.errno!="200"){
+	                	mui.toast(ResultData.errtext);
+	                }else{
+		                carnos.push(carno);
+		                mui.toast("添加成功");
+	                }
+					buildHtml();
+	            }
+	        });
+		}
+		
+		//mui.toast("你最多关联3个车牌号")
+	}
+	
+	function checkPlate(plate) {
+        var re = /(^[\u4E00-\u9FA5]{1}[A-Z0-9]{6}$)|(^[A-Z]{2}[A-Z0-9]{2}[A-Z0-9\u4E00-\u9FA5]{1}[A-Z0-9]{4}$)|(^[\u4E00-\u9FA5]{1}[A-Z0-9]{5}[挂学警军港澳]{1}$)|(^[A-Z]{2}[0-9]{5}$)|(^(08|38){1}[A-Z0-9]{4}[A-Z0-9挂学警军港澳]{1}$)/;
+        if (plate.search(re) == -1) {
+        	mui.toast("请输入正确的车牌号")
+            return false;
+        }else {
+            return true;
+        }
+    }
+	
+	function deletethis(thisdiv){
+		mui.confirm("","是否删除该车牌？",["否","是"],function(e){
+			if(e.index==1){
+				var carno = $(thisdiv).parent("div").next("div").text().trim();
+				$.ajax({
+		            url: basePath+"licensePlate/delete.do",
+		            type: 'post',
+		            async: false,
+		            data: { "plateno": carno},
+		            success: function (ResultData) {
+		                if(ResultData.errno!="200"){
+		                	mui.toast(ResultData.errtext);
+		                }else{
+		               		mui.toast("删除成功");
+		                	carnos.remove(carno);
+		                }
+		                buildHtml();
+		            }
+		        });				
+				
+			}
+		});
+	}
+	
+	
+</script>

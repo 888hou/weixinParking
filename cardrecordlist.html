@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.min.js"></script>
+	    <script type="text/javascript" src="js/jquery-1.11.3.js" ></script>
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <script type="text/javascript" charset="utf-8">
+	      	mui.init();
+	    </script>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.contentleft li{
+    		display: block;
+    		padding:5px 20px;
+    		display: -webkit-box;
+    	}
+    	.content{display: -webkit-box;}
+    	.contentleft{
+    		width:100%;
+    	}
+    	.contentright{
+    		width:20%;
+    		-webkit-box-flex: 1;
+    		text-align: center;
+    	}
+    	.contentright span{display:block;margin:50px 15px;font-size: 1.1em;}
+	</style>
+	
+	<body>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						缴费明细
+					</a>
+					<a class="mui-control-item" href="#item2">
+						充值明细
+					</a>
+				</div>
+			</div>
+			<div>
+				<div id="item1" class="mui-control-content mui-active mui-scroll-wrapper" style="height:150px;">
+					<div id="scroll" class="mui-content mui-scroll-wrapper" style="height:150px;">
+					    <div class="mui-scroll">
+					        <ul class="mui-table-view">
+					        	<h5 style="background-color: #efeff4;margin:0px;">20161108</h5>
+								<li class="mui-table-view-cell">
+									记录1
+								</li>
+								<li class="mui-table-view-cell">
+									记录2
+								</li>
+								<li class="mui-table-view-cell">
+									记录3
+								</li>
+								<li class="mui-table-view-cell">
+									记录4
+								</li>
+								<h5 style="background-color: #efeff4;margin:0px;">20161108</h5>
+								<li class="mui-table-view-cell">
+									记录1
+								</li>
+								<li class="mui-table-view-cell">
+									记录2
+								</li>
+								<li class="mui-table-view-cell">
+									记录3
+								</li>
+								<li class="mui-table-view-cell">
+									记录4
+								</li>
+								<h5 style="background-color: #efeff4;margin:0px;">20161108</h5>
+								<li class="mui-table-view-cell">
+									记录1
+								</li>
+								<li class="mui-table-view-cell">
+									记录2
+								</li>
+								<li class="mui-table-view-cell">
+									记录3
+								</li>
+								<li class="mui-table-view-cell">
+									记录4
+								</li>
+								
+							</ul>
+					    </div>
+					</div>
+				</div>
+				
+				
+				<div id="item2" class="mui-control-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-1
+						</li>
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-2
+						</li>
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-3
+						</li>
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-3
+						</li>
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-3
+						</li>
+						<li class="mui-table-view-cell">
+							第三个选项卡子项-3
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<h5 class="mui-content-padded">详情</h5>
+			<div class="mui-card">
+				<!--内容区-->
+				<div class="mui-card-content">
+					<div class="content">
+						<div class="contentleft">
+							<li><span>类&emsp;&emsp;型:停车缴费</span> </li>
+							<li><span>车&ensp;牌&ensp;号:18268111111</span></li>
+							<li><span>缴费时间:2016年11月9日 14:33:03</span></li>
+							<li><span>扣款金额:15.0元</span></li>
+							<li><span>订&ensp;单&ensp;号:24584571414</span></li>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<h5 class="mui-content-padded">卡片详情</h5>
+			<div class="mui-card">
+				<!--页眉，放置标题-->
+				<div class="mui-card-header">
+					<span>长期卡-包月卡</span>
+					<span style="font-size: 15px;">NO:123456789</span>
+				</div>
+				<!--内容区-->
+				<div class="mui-card-content">
+					<div class="content">
+						<div class="contentleft">
+							<li><span>绑定车牌:浙A15248</span></li>
+							<li><span>开卡时间:2016年11月9日 14:33:03</span></li>
+							<li><span>最新时间:2016年11月9日 14:33:03</span></li>
+							<li><span>卡片余额:105.0元</span></li>
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		
+	</body>
+</html>
+
+<script type="text/javascript">
+$(function(){
+	//滚动
+	mui('.mui-scroll-wrapper').scroll({
+		deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+	});
+});
+
+	function l(obj){
+		console.log(obj);
+	}
+	
+	function addcarno(){
+		mui.toast("你最多关联3个车牌号")
+	}
+	
+	function deletethis(thisdiv){
+		mui.confirm("","是否删除该车牌？",["否","是"],function(e){
+			if(e.index==1){
+				l("删除");				
+				$(thisdiv).parent("div").parent("li").remove();
+			}else{
+				l("不删除");
+			}
+		});
+	}
+	
+	
+</script>

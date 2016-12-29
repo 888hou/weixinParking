@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登录</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/login.css" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						密码登录
+					</a>
+					<a class="mui-control-item" href="#item2">
+						手机登录
+					</a>
+				</div>
+			</div>
+			<div>
+				<div id="item1" class="mui-control-content mui-active">
+					<div class="mui-content">
+						<form id='login-form' class="mui-input-group">
+							<input id='account0' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')">
+							<input id='password0' type="password" class="mui-input-clear mui-input" placeholder="请输入账号密码" maxlength="20" >
+						</form>
+						<div class="mui-content-padded">
+							<button id='login0' onclick="pslogin()" class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+							<div class="link-area"><a class='reg' href="register.html?action=register">注册账号</a> <span class="spliter">|</span> <a id='forgetPassword' href="register.html?action=forget">忘记密码</a>
+							</div>
+						</div>
+					</div>	
+				</div>
+				
+				<div id="item2" class="mui-control-content">
+					<div class="mui-content">
+						<form id='login-form' class="mui-input-group">
+							<div class="phone-input">
+								<input id='account1' type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号码" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')">
+								<button id="phcode1" onclick="getCode()" type="button" class="mui-btn mui-btn-outlined get-code">获取验证码</button>
+							</div>
+							<input id='code' class="mui-input-clear mui-input" placeholder="请输入短信验证码" maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')">
+						</form>
+						<div class="mui-content-padded">
+							<button onclick="phlogin()" id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+							<div class="link-area">
+								<a href="register.html" class='reg'>注册账号</a>
+							</div>
+						</div>
+					</div>	
+				</div>
+			</div>
+			<script src="js/mui.min.js"></script>
+			<script src="js/jquery-1.11.3.js"></script>
+			<script src="js/base.js"></script>
+			<script src="js/login.js"></script>
+			<script>
+				function phlogin(){
+					$.ajax({
+				        url: basePath+"pub/app/fastlogin.do",
+				        type: 'post',
+				        async: true,
+				        data: { "phone":$("#account1").val(),"smsCode":$("#code").val()},
+				        success: function (ResultData) {
+				        	l(ResultData);
+				        	if(ResultData.errno=="200"){
+				        		//跳转到登录个人中心页
+				        		sessionStorage.loginname = ResultData.data.loginname;
+				        		sessionStorage.name = ResultData.data.name;;
+				        		location.href= "authority/personal.html"
+				            }else{
+				            	mui.toast(ResultData.errtext);  
+				            }
+				        }
+				    });
+				}
+				
+				function getCode(){
+					$.ajax({
+				        url: basePath+"sms/send.do",
+				        type: 'post',
+				        async: true,
+				        data: { "phone":$("#account1").val()},
+				        success: function (ResultData) {
+				        	l(ResultData);
+				        	if(ResultData.errno=="200"){
+				        		//倒计时
+				            }else{
+				            	mui.toast(ResultData.errtext);  
+				            }
+				        }
+				    });
+					
+				}
+			</script>
+	</body>
+	
+</html>

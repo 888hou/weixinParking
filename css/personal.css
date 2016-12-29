@@ -1,0 +1,25 @@
+
+.mui-table-view .mui-media-object{
+	max-width: 60px;
+	height: 54px;
+}
+
+h1{
+	font-size: 18px;
+}
+
+.mui-media{
+	padding: 10px;
+}
+
+.mui-media:after{
+	left: 0px;
+}
+
+.mui-table-view-cell>.content-head:not(.mui-btn){
+	margin: 0;
+}
+
+.mui-content>.mui-table-view:first-child{
+	margin-top:0;
+}

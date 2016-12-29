@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>填写校验码</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/register.css" />
+		<!--<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css"/>-->
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">填写校验码</h1>
+		</header>
+		<div class="mui-content">
+			<h4 class="code-text">我们已经发送了校验码到您的手机:</h4>
+			<h2 class="phone-num">******</h2>
+			<form id='register-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label>校验码</label>
+					<input id="checkCode" type="tel" class="mui-input" placeholder="请输入短信校验码" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="6" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+					<button type="button" class="get-checkCode" disabled="disabled">60秒后重新获取</button>
+				</div>
+			</form>
+			<div class=""></div>
+			<div class="mui-content-padded">
+				<button id="next2" class="mui-btn mui-btn-block mui-btn-primary">下一步</button>
+				<p>继续操作即视为已阅读并同意<a href="user-agreement.html">《用户协议》</a></p>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/base.js" ></script>
+		<script>
+			mui.init();
+			$(function() {
+				var phone = getCookie('tempPhone');
+				//修改手机号
+				$('.phone-num').val(phone);
+				var action = GetQueryString("action");
+				if (action == 'forget') {
+					$('title').html('找回密码');
+					$('.mui-title').html('找回密码');
+					$('.mui-content-padded p').hide();
+				}
+				
+				init(phone);
+				
+				//点击下一步进行验证
+				$('#next2').on('tap',function() {
+					var code = $('#checkCode').val();
+					if (checkCode(code)) {
+						checkSerCode(phone,code,action);
+					}
+				})
+				
+				//重新获取验证码
+				$('.get-checkCode').on('tap',function() {
+					getCode(phone,countDown,$('.get-checkCode'));
+				})
+				
+			})
+			
+			function init(phone) {
+				//设置手机号
+				$('.phone-num').html(phone);
+				countDown($('.get-checkCode'));
+			}
+			
+			function checkSerCode(phone,code,action) {
+				$.ajax({
+					url: basePath+'sms/validate.do',
+					type: 'post',
+					data: {
+						phone: phone,
+						smsCode: code
+					},
+					success: function(res) {
+						if (res.errno == '200') {
+							setCookie('smsCode',code,'d1');
+							if (action == 'forget') {
+								mui.openWindow({
+									url: 'register3.html?action='+action,
+									id: 'register3.html'
+								})
+							} else {
+								mui.openWindow({
+									url: 'register3.html',
+									id: 'register3.html'
+								})  
+							}
+						} else {
+							mui.toast(res.errtext);
+						}
+					}
+				})
+			}
+			
+			//获取验证码
+			function getCode(phone,fn,el) {
+				$.ajax({
+			        url: baseUrl+'/carowner/pub/app/sms/send.do',
+			        type: 'get',
+			        data: {
+			        	phone: phone
+			        },
+			        success: function (res, status, xhr) {
+			        	if (res.errno == '200') {
+			        		fn(el);
+			        	} else {
+			        		mui.toast(errtext);
+			        	}
+			        },
+			        error: function(err) {
+			        	mui.toast('短信验证码发送失败，请重试');
+			        }
+			    });
+			}
+		</script>
+	</body>
+</html>

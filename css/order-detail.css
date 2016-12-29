@@ -1,0 +1,77 @@
+.contentleft li {
+	display: block;
+	margin: 10px 15px;
+	display: -webkit-box;
+}
+
+.content {
+	display: -webkit-box;
+}
+
+.contentleft {
+	width: 100%;
+}
+
+.contentright {
+	width: 20%;
+	-webkit-box-flex: 1;
+	text-align: center;
+}
+
+p {
+	color: #000;
+}
+.no-info{
+	text-align: center;
+	line-height: 60px;
+}
+
+.contentright span {
+	display: block;
+	margin: 50px 15px;
+	font-size: 1.1em;
+}
+
+.mui-card-footer,
+.mui-card-header {
+	flex-flow: column;
+	align-items: flex-start;
+}
+
+.foot-info {
+	display: flex;
+	flex-flow: row nowrap;
+	visibility: hidden;
+}
+
+.current-debt {
+	flex: 1;
+	padding-left: 15px;
+	line-height: 50px;
+}
+
+.go-btn {
+	display: block;
+	width: 30%;
+	line-height: 50px;
+	background-color: #007aff;
+	text-align: center;
+	font-weight: bold;
+	color: #fff;
+}
+
+.red-price {
+	font-size: 18px;
+	color: red;
+}
+
+.mui-card-footer {
+	display: block;
+	color: #000;
+	font-size: 20px;
+	line-height: 40px;
+}
+
+.big-red {
+	font-size: 25px;
+}

@@ -1,0 +1,94 @@
+.mui-content>.mui-table-view:first-child{
+	margin-top:0;
+}
+
+.info-detail{
+	margin-top: 15px;
+}
+
+.info-input[type=text]{
+	border: none;
+	outline: none;
+	margin: 0;
+	padding: 0;
+	height: auto;
+	width: 80%;
+	text-align: right;
+}
+
+select{
+	border: none;
+	outline: none;
+	margin: 0;
+	padding: 0;
+	height: auto;
+	width: auto;
+	text-align: right;
+}
+
+.sexy-item{
+	position: relative;
+	margin-left: 10px;
+	color: #888;
+}
+
+.sexy-dot{
+	position: absolute;
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 5px;
+	background-color: #888;
+	left: -10px;
+	top:0;
+	bottom:0;
+	right: 0;
+	margin:auto 0;
+}
+
+.sexy .active{
+	color: #000;
+}
+
+.sexy .active .sexy-dot{
+	background-color: orange;
+}
+
+.head-img{
+	width: 60px;
+	margin-right: 20px;
+	border-radius: 50%;
+}
+
+#head{
+	line-height: 60px;
+}
+
+.head{
+	height:0;
+}
+
+.h-text{
+	display: inline-block;
+	line-height: 86pxs;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

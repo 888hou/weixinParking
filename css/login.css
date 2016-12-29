@@ -1,0 +1,48 @@
+body{
+	background-color: #fff;
+	padding: 0 10px;
+}
+
+.mui-content{
+	background-color: #fff;
+}
+
+.mui-input{
+	border-radius: 8px!important;
+	border: 1px solid rgba(0,0,0,.2)!important;
+	margin-top: 20px;
+}
+
+.phone-input{
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#account{
+		flex: 1;	
+}
+
+.mui-input-group:after{
+	height: 0!important;
+}
+
+.get-code{
+	margin-top: 20px;
+	float: right;
+	height: 40px;
+	border-radius: 10px;
+	width: 100px;
+	margin-left: 10px;	
+}
+
+.agreement{
+	margin-top: 20px;
+	text-align: center;
+}
+
+#login{
+	margin-top: 50px;
+	border-radius: 10px;
+}
+
+

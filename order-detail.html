@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <link rel="stylesheet" type="text/css" href="css/order-detail.css"/>
+		<title>订单详情</title>
+	</head>
+	
+	<body>
+		<div class="mui-content">
+			
+		</div>
+		<nav class="mui-bar mui-bar-tab foot-info foot-pay">
+			<div class="current-debt">缴费后请在15分钟内离场</div>
+			<a href="javascript:toPay()" class="mui-pull-right go-btn">支付</a>
+		</nav>
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/base.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+		<script src="js/weixinshouquan.js"></script> 
+		<script src="js/order-detail.js"></script>
+		<script type="text/html" id="orderInfo">
+			<div class="mui-card">
+				<div class="mui-card-header">
+					<input id="parkingrecordid" value="{{parkingrecordid}}"  type="hidden"/>
+					<p><span>车&ensp;牌&ensp;号: {{car}}</span></p>
+					<p><span>停&ensp;车&ensp;场: {{position}}</span></p>
+					<p><span>车&ensp;位&ensp;号: {{num}}</span></p>
+				</div>
+				<div class="mui-card-content">
+					<div class="content">
+						<div class="contentleft">
+							<li><span>入场时间: {{date}}</span></li>
+							<li><span>停放时长: {{time}}</span></li>
+							<li><span>停&ensp;车&ensp;费: <span class="red-price">{{price}}</span></span></li>
+							<li><span>已&ensp;缴&ensp;费: <span class="red-price">{{yetPay}}</span></span></li>
+						</div>
+					</div>
+				</div>
+				<div class="mui-card-footer">
+					应付金额: <span class="red-price big-red">{{pay}}</span>
+				</div>
+			</div>
+		</script>
+		
+        
+	<script>
+	
+			function toPay(){
+	    		var recordids = $("#parkingrecordid").val();
+	    		var money = parseFloat($('.big-red').html());
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"pub/common/order/precreate.do",
+					data:{"parkingrecordids":recordids,"money":money,
+						"type":9,"openid":sessionStorage.openid},
+					dataType : "json",
+					success : function(data) {
+						if(data.errno=="200"){
+							configPayInfo(data.data.prepayid);
+						}else{
+							mui.toast(data.errtext);
+						}
+					}
+				});
+			}
+			
+			function configPayInfo(prepareid){
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"pub/common/auth/getPaySign.do",
+					data:{"prepareid":prepareid,"type":9},
+					dataType : "json",
+					success : function(data) {
+						if(data.errno=="200"){
+							var paysign = data.data.paysign;
+							var timeStamp = data.data.timeStamp;
+							var nonceStr = data.data.nonceStr;
+							pay(paysign,timeStamp,nonceStr,prepareid);
+						}else{
+							mui.toast(data.errtext);
+						}
+						
+					}
+				});
+			}
+			
+			function pay(paysign,timeStamp,nonceStr,prepareid){	
+				if (typeof WeixinJSBridge == "undefined"){
+				   if( document.addEventListener ){
+				       document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+				   }else if (document.attachEvent){
+				       document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+				       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+				   }
+				}else{
+				   onBridgeReady(paysign,timeStamp,nonceStr,prepareid);
+				}
+			}
+			
+			function onBridgeReady(paysign,timeStamp,nonceStr,prepareid){
+			   WeixinJSBridge.invoke('getBrandWCPayRequest', {
+			           "appId" : "wxd9d668f0822793d3",     //公众号名称，由商户传入     
+			           "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
+			           "nonceStr" : nonceStr, //随机串     
+			           "package" : "prepay_id="+prepareid,     
+			           "signType" : "MD5",         //微信签名方式：     
+			           "paySign" : paysign //微信签名 
+			       },function(res){ 
+			           if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+			           		location.reload();
+			           }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+			           		mui.toast("取消支付");
+			           }else if(res.err_msg == "get_brand_wcpay_request:fail"){
+			           		mui.toast("支付失败");
+			           }
+			       }
+			   ); 
+			}
+		
+		</script>
+		
+	</body>
+</html>
+

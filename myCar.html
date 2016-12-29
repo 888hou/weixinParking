@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>个人中心</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/personalInfo.css"/>
+	</head>
+		
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的车牌</h1>
+			<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right save-info">保存</button>
+		</header>
+		<div class="container mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+			        <a id="head" class="mui-navigate-right">
+			        	<span class="h-text">头像</span>
+						<span class="mui-pull-right head">
+							<img class="head-img mui-action-preview" id="head-img1" src="imgs/portrait.png">
+						</span>
+					</a>
+			    </li>
+			</ul>
+			
+			<ul class="mui-table-view info-detail">
+		        <li class="mui-table-view-cell">
+		                             昵称
+		            <input type="text" name="nickname" id="nickname" class="mui-pull-right info-input" placeholder="修改昵称"/>
+		        </li>
+		        <li class="mui-table-view-cell sexy">
+		                             性别
+		            <div class="mui-pull-right">
+		            	<label for="male" class="sexy-item active"><span class="sexy-dot"></span>先生</label>
+		            	<label for="female" class="sexy-item"><span class="sexy-dot"></span>女士</label>
+		            </div>
+		        </li>
+		        <li class="mui-table-view-cell">
+		                              手机号
+		            <input type="text" name="nickname" id="nickname" value="18735610165" class="mui-pull-right info-input"/>
+		        </li>
+		        <li class="mui-table-view-cell">
+		                              具体地址
+		            <input type="text" name="nickname" id="nickname" class="mui-pull-right info-input" placeholder="请填写具体住址"/>
+		        </li>
+		   </ul>
+		   
+		   <!--头像选取底部弹出框-->
+		   <div id="picture" class="mui-popover mui-popover-action mui-popover-bottom" style="display: none;">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#" id="takePhoto">拍照</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#">从相册选取</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#picture"><b>取消</b></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto_1.1.3.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+		<script src="js/personalInfo.js"></script>
+	</body>
+</html>

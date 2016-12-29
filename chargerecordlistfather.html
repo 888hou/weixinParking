@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.min.js"></script>
+	    <script type="text/javascript" src="js/jquery-1.11.3.js" ></script>
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <script type="text/javascript" charset="utf-8">
+	      	mui.init();
+	    </script>
+		<title>缴费记录</title>
+	</head>
+	<style type="text/css">
+		.contentleft li{
+    		display: block;
+    		padding:5px 20px;
+    		padding-right:0px;
+    		display: -webkit-box;
+    	}
+    	.content{display: -webkit-box;}
+    	.contentleft{
+    		width:100%;
+    	}
+    	.contentright{
+    		width:20%;
+    		-webkit-box-flex: 1;
+    		text-align: center;
+    	}
+    	.contentright span{display:block;margin:50px 15px;font-size: 1.1em;}
+    	.borderhalf:before {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 1px;
+			content: '';
+			-webkit-transform: scaleY(.5);
+			transform: scaleY(.5);
+			background-color: #c8c7cc;
+		}
+		footer{background-color: white;position: fixed;bottom: 0px; height:50px;width: 100%;display: -webkit-box;}
+	</style>
+	
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">下拉刷新和上拉加载更多</h1>
+		</header>
+		
+	<div class="mui-iframe-wrapper" style="top: 45px; bottom: 0px;">
+		<iframe src="chargerecordlist.html" id="chargerecordlist.html" name="chargerecordlist.html">
+		
+	</iframe>
+	</div>
+	</body>
+</html>
+<script type="text/javascript">
+		//启用双击监听
+		mui.init({
+			gestureConfig:{
+				doubletap:true
+			},
+			subpages:[{
+				url:'chargerecordlist.html',
+				id:'chargerecordlist.html',
+				styles:{
+					top: '45px',
+					bottom: '0px',
+				}
+			}]
+		});
+	
+		var contentWebview = null;
+		document.querySelector('header').addEventListener('doubletap',function () {
+			if(contentWebview==null){
+				contentWebview = plus.webview.currentWebview().children()[0];
+			}
+			contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+		});
+	</script>
+<script type="text/javascript">
+$(function(){
+
+});
+
+
+	function l(obj){
+		console.log(obj);
+	}
+	
+	function addcarno(){
+		mui.toast("你最多关联3个车牌号")
+	}
+	
+	function deletethis(thisdiv){
+		mui.confirm("","是否删除该车牌？",["否","是"],function(e){
+			if(e.index==1){
+				l("删除");				
+				$(thisdiv).parent("div").parent("li").remove();
+			}else{
+				l("不删除");
+			}
+		});
+	}
+	
+</script>

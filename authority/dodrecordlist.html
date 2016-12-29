@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-1.11.3.js" ></script>
+		<script src="../js/base.js"></script>
+		<script src="../js/login.js"></script>
+	    <script type="text/javascript" src="../js/jquery-1.11.3.js" ></script>
+	    <link href="../css/mui.min.css" rel="stylesheet"/>
+	    <script type="text/javascript" charset="utf-8">
+	      	mui.init();
+	    </script>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.contentleft li{
+    		display: block;
+    		padding:5px 20px;
+    		padding-right:0px;
+    		display: -webkit-box;
+    	}
+    	.content{display: -webkit-box;}
+    	.contentleft{
+    		width:100%;
+    	}
+    	.contentright{
+    		width:20%;
+    		-webkit-box-flex: 1;
+    		text-align: center;
+    	}
+    	.contentright span{display:block;margin:50px 15px;font-size: 1.1em;}
+    	.borderhalf:before {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 1px;
+			content: '';
+			-webkit-transform: scaleY(.5);
+			transform: scaleY(.5);
+			background-color: #c8c7cc;
+		}
+		footer{background-color: white;position: fixed;bottom: 0px; height:50px;width: 100%;display: -webkit-box;}
+	</style>
+	
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="margin-bottom:50px;">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<!-- 车牌号 -->
+				<div class="mui-card">
+					<form id="carnolist" class="mui-input-group">
+					<!-- 
+						<div class="mui-input-row mui-checkbox">
+							<label>浙A21546</label>
+							<input name="checkbox1" value="Item 3" type="checkbox">
+						</div>
+					 -->
+					</form>
+				</div>
+				<!-- 欠费记录 -->
+				<div id="container"></div>
+			</div>
+		</div>
+		<!-- footer -->
+		<style>
+		.sp1{width: 70%; display: block; padding: 15px 10px; text-align: right;font-size:0.8em;}
+		.sp2{color:red;font-size: 1.5em;}
+		.sp3{color:red;font-size: 0.9em;}
+		.pay{background-color: orangered;width: 60px;width:30%;-webkit-box-flex: 1;text-align: center;padding-top: 15px;font-size: 1.0em;color: white;}
+		</style>
+		<footer id="bottomDiv" class="borderhalf" >
+			<span class="sp1">共选中<span class="sp2">0</span>条，共计<span class="sp3">￥</span><span class="sp2">0</span><span class="sp3">.00</span></span>
+			<div class="pay">支&ensp;付</div>
+		</footer>
+		
+		
+		
+		<script>
+		/*********mui 上拉刷新。********/
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullupRefresh
+				}
+			}
+		});
+		
+		/*
+		 * 下拉刷新具体业务实现
+		 */
+		function pulldownRefresh() {
+			setTimeout(function() {
+				var table = document.body.querySelector('.mui-table-view');
+				var cells = document.body.querySelectorAll('.mui-table-view-cell');
+				//模拟数据
+				for(var i = cells.length, len = i + 3; i < len; i++) {
+					var li = document.createElement('li');
+					li.className = 'mui-table-view-cell';
+					li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
+					//下拉刷新，新纪录插到最前面；
+					table.insertBefore(li, table.firstChild);
+				}
+		
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+			}, 1500);
+		}
+		
+		var count = 0;
+		/*
+		 * 上拉加载具体业务实现
+		 */
+		function pullupRefresh() {
+			setTimeout(function() {
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh((false)); //参数为true代表没有更多数据了。
+				count++;
+				var table = document.body.querySelector('.mui-table-view');
+				var cells = document.body.querySelectorAll('.mui-table-view-cell');
+				getDodData(count);
+			}, 100);
+		}
+		
+		if(mui.os.plus) {
+			mui.plusReady(function() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				}, 100);
+		
+			});
+		} else {
+			mui.ready(function() {
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			});
+		}
+	</script>
+		
+	</body>
+</html>
+
+<script type="text/javascript">
+	$(function(){
+		setHtml();	
+		//选择车牌号
+			$("[name='checkbox1']").click(function(){
+			$.each($("[name='checkbox1']"),function(index,item){
+				if($(item).is(':checked')==true){
+					$.each($("[name='"+$(item).val()+"']"),function(index1,item1){
+						$(item1).show();
+					})
+				}else{
+					$.each($("[name='"+$(item).val()+"']"),function(index1,item1){
+						$(item1).hide();
+					})
+				}
+			})
+			hideDate();
+		})
+	});
+
+	function hideDate(){  //隐藏日期
+		$.each($("[name='ymdate']"),function(index,item){
+			var flag = false;
+			$.each($(item).children("div"),function(index1,item1){
+				if(!$(item1).is(":hidden")){
+					flag=true;
+				}
+			})
+			
+			if(flag){
+				$(item).children("h5").show();
+			}else{
+				$(item).children("h5").hide();
+			}
+			
+		})
+	}
+
+	function setHtml(){
+		var user = getUserInfo();
+		$("#carnolist").empty();
+		$.each(user.carno.split(","),function(index,item){
+			if(item!=""){
+				var html = '<div class="mui-input-row mui-checkbox">'+
+							'	<label>'+item+'</label>'+
+							'	<input name="checkbox1" value="'+item+'" type="checkbox" checked>'+
+						   '</div>';
+				$("#carnolist").append(html);
+			}
+		});
+	}
+	
+	function getDodData(page){
+		$.ajax({
+            url: basePath+"user/app/parkrec/arrears.do",
+            type: 'post',
+            async: false,
+            data: {"tempPageIndex": page, "length": 2 },
+            success: function (ResultData) {
+            	if(ResultData.errno=="200"){
+            		var dataSource = ResultData.data.aaData;
+            		//判断是否有新数据，没有就不让上拉。
+            		var hasProp = false;  
+				    for (var prop in dataSource){  
+				        hasProp = true;  
+				        break;  
+				    }  
+				    if(!hasProp)
+				    	mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+            		for (var key in dataSource) {
+            			var html='';
+            			if($("[name='"+key+"']").length>0){
+            				$.each(dataSource[key],function(index,item){
+								var record = item;
+								var paytype = getPayType(record.paytype);
+								html+= '<div class="mui-card" name="'+record.carno+'" id="'+record.parkingrecordid+'">'+
+									'	<div class="mui-card-header">'+
+									'		<span>'+record.parkname+'</span>'+
+									'		<span style="font-size: 15px;color:blue">'+record.parkingno+'</span>'+
+									'	</div>'+
+									'	<div class="mui-card-content">'+
+									'		<div class="content">'+
+									'			<div class="contentleft">'+
+									'				<li><span>车&ensp;牌&ensp;号:'+record.carno+'</span></li>'+
+									'				<div id="inout" style="display: -webkit-box;">'+
+									'					<div id="inoutleft" style="width: 80%;">'+
+									'						<li><span>进车时间:'+record.intime+'</span></li>'+
+									'						<li><span>出车时间:'+record.outtime+'</span></li>	'+
+									'					</div>'+
+									'					<div id="inoutright" class="mui-input-row mui-checkbox" style="width: 20%;text-align: center;">'+
+									'						<input name="checkbox0" value="Item 4" type="checkbox" >'+
+									'						<input name="recordid" id="'+record.parkingrecordid+'" value="Item 4" type="hidden" >'+
+									'					</div>'+
+									'				</div>'+
+									'				<li msg="'+record.arrear+'"><span>欠费金额:<span style="color:red;font-size: 1.5em;;">'+record.arrear+'元</span></span></li>'+
+									'			</div>'+
+									'		</div>'+
+									'	</div>'+
+								   '</div>';
+							})
+							$("[name='"+key+"']").parent("div").append(html);
+            			}else{
+            				html+='<div name="ymdate">';
+	            			html+='<h5 class="mui-content-padded" name="'+key+'">'+key+'</h5>'; 
+							$.each(dataSource[key],function(index,item){
+								var record = item;
+								var paytype = getPayType(record.paytype);
+								html+= '<div class="mui-card" name="'+record.carno+'" id="'+record.parkingrecordid+'">'+
+								'	<div class="mui-card-header">'+
+								'		<span>'+record.parkname+'</span>'+
+								'		<span style="font-size: 15px;color:blue">'+record.parkingno+'</span>'+
+								'	</div>'+
+								'	<div class="mui-card-content">'+
+								'		<div class="content">'+
+								'			<div class="contentleft">'+
+								'				<li><span>车&ensp;牌&ensp;号:'+record.carno+'</span></li>'+
+								'				<div id="inout" style="display: -webkit-box;">'+
+								'					<div id="inoutleft" style="width: 80%;">'+
+								'						<li><span>进车时间:'+record.intime+'</span></li>'+
+								'						<li><span>出车时间:'+record.outtime+'</span></li>	'+
+								'					</div>'+
+								'					<div id="inoutright" class="mui-input-row mui-checkbox" style="width: 20%;text-align: center;">'+
+								'						<input name="checkbox0" id="1" value="Item 4" type="checkbox" >'+
+								'						<input name="recordid" id="'+record.parkingrecordid+'" value="Item 4" type="hidden" >'+
+								'					</div>'+
+								'				</div>'+
+								'				<li msg="'+record.arrear+'"><span>欠费金额:<span style="color:red;font-size: 1.5em;;">'+record.arrear+'元</span></span></li>'+
+								'			</div>'+
+								'		</div>'+
+								'	</div>'+
+							   '</div>';
+							})
+							html+='</div>';
+							$("#container").append(html);
+	            		}
+            		}
+            	}else{
+            		mui.toast(ResultData.errtext);
+            	}
+            	
+            	addCheckbox0Click();
+            }
+        });
+	}	
+	
+	function addCheckbox0Click(){
+		$("input[name='checkbox0']").off("click");
+		var billmap = {};
+		$("input[name='checkbox0']").click(function(){
+			$.each($("[name='checkbox0']"),function(index,item){
+				if($(item).is(':checked')==true){
+					var money = $(item).parent("div").parent("div").next("li").attr("msg");
+					var id = $(item).next("input[name='recordid']").attr("id");
+					billmap[id] = money;
+				}
+			})
+			sumMoney(billmap);
+		})
+	}
+	
+	function sumMoney(billmap){
+		var summoney = 0.0;
+		var count = 0;
+		for(var key in billmap){
+			l($("#"+key+""));
+			if($("#"+key+"").is('hidden')==false){
+				count++;
+				var money = parseFloat(billmap[key])
+				summoney+=money;
+			}
+		}
+		$("#bottomDiv").find("span.sp1").find("span:eq(0)").text(count);
+		$("#bottomDiv").find("span.sp1").find("span:eq(2)").text(summoney);
+	}
+</script>

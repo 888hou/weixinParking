@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/jquery-1.11.3.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+		<title></title>
+	</head>
+	<style>
+		button{
+			width:100px;
+			height:50px;
+			
+		}
+	</style>
+	<body>
+		<section style="width:100px;margin:0px auto;margin-top:50px;">
+			<button onclick="psearch()">停车查询</button><br /><br />
+			<button onclick="dsearch()">欠费查询</button><br /><br /><br />
+			<button onclick="tologin()">个人中心</button><br /><br />
+			<button onclick="tomap()">停车导航</button><br /><br /><br />
+			<button onclick="topay()">支付测试</button><br /><br />
+		</section>  
+		
+	</body>
+</html>
+<script src="js/base.js"></script>
+<script>
+	function psearch(){
+		location.href="inquery.html?state=1"
+	}
+	function dsearch(){
+		location.href="inquery.html?state=2"
+	}
+	function tologin(){
+		location.href="login.html"
+	}
+	function tomap(){
+		location.href="map.html"
+	}
+	function topay(){
+		toPay()
+		//location.href="map.html"
+	}
+</script>
+
+<script>
+			//pay
+			$(function(){
+				//getSignature();
+				//config();
+			})
+			//获取signature
+			function config(map){
+				//var map = getSignature();  //获取appId/timeStamp/nonceStr/跳转的支付url.
+				
+				var signature = map["paysign"];
+				var timeStamp = map["timeStamp"];
+				var nonceStr = map["nonceStr"];
+				var url = "";
+				var te = {
+				    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				    appId: 'wxd9d668f0822793d3', // 必填，公众号的唯一标识
+				    timestamp: timeStamp, // 必填，生成签名的时间戳
+				    nonceStr: nonceStr, // 必填，生成签名的随机串
+				    signature: signature,// 必填，签名，见附录1
+				    jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				}
+				wx.config({
+				    //debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				    appId: 'wxd9d668f0822793d3', // 必填，公众号的唯一标识
+				    timestamp: timeStamp, // 必填，生成签名的时间戳
+				    nonceStr: nonceStr, // 必填，生成签名的随机串
+				    signature: signature,// 必填，签名，见附录1
+				    jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+				
+				wx.ready(function(){
+					var param  = "" +window.location.search;
+					if (param.indexOf("code")>0){  //如果已经授权。
+						getOpenid();
+					}else{ //没有授权，开始授权
+						var url = encodeURI("http://zw0955.leway.com.cn/stp_apps/html/weixin2/weixinhome.html");
+						url='http%3a%2f%2fzw0955.leway.com.cn%2fstp_apps%2fhtml%2fweixin2%2fweixinhome.html';
+						window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd9d668f0822793d3&redirect_uri=http%3a%2f%2fzw0955.leway.com.cn%2fstp_apps%2fhtml%2fweixin2%2fweixinhome.html&response_type=code&scope=snsapi_base&state=111#wechat_redirect';
+					}
+				});
+			}	
+			
+			function getSignature(){
+				var map={};
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"weixin/parkinglot/test/getPaySign.do?",
+					dataType : "json",
+					success : function(data) {
+						map={
+							"appId":"wxd9d668f0822793d3",
+							"timeStamp":data.timeStamp,
+							"paysign":data.paysign,
+							"nonceStr":data.nonceStr,
+						};
+						config(map);
+					}
+				});
+			}
+			
+			//获取openid
+			var openid;
+			function getOpenid(){
+				var code = GetQueryString("code");
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"weixin/parkinglot/test/getOpenid.do?code="+code,
+					dataType : "json",
+					success : function(data) {
+						openid = data.openid;
+						if(openid!=null){
+							$("#openid").val(openid);	
+						}
+					}
+				});
+			}	
+						
+			function toPay(){
+				if(openid==null){
+					alert("请先授权认证");
+				}
+				getprepareid();
+			}
+			
+			function getprepareid(){
+				var body="test order";
+				var money =10;
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"weixin/parkinglot/test/toPay.do?openid="+openid+"&body="+body+"&money="+money,
+					dataType : "json",
+					success : function(data) {
+						var prepareid = data.prepay_id;
+						alert(prepareid);
+						getPayInfo(prepareid);
+					}
+				});
+			}
+			
+			function getPayInfo(prepareid){
+				$.ajax({
+					type : "Post",
+					async : "false",
+					url : basePath+"weixin/parkinglot/test/getPaySign.do?prepareid="+prepareid,
+					dataType : "json",
+					success : function(data) {
+						var paysign = data.paysign;
+						var timeStamp = data.timeStamp;
+						var nonceStr = data.nonceStr;
+						pay(paysign,timeStamp,nonceStr,prepareid);
+					}
+				});
+			}
+			
+			function pay(paysign,timeStamp,nonceStr,prepareid){	
+				if (typeof WeixinJSBridge == "undefined"){
+				   if( document.addEventListener ){
+				       document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+				   }else if (document.attachEvent){
+				       document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+				       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+				   }
+				}else{
+				   onBridgeReady(paysign,timeStamp,nonceStr,prepareid);
+				}
+			}
+			
+			function onBridgeReady(paysign,timeStamp,nonceStr,prepareid){
+			
+			   WeixinJSBridge.invoke('getBrandWCPayRequest', {
+			           "appId" : "wxd9d668f0822793d3",     //公众号名称，由商户传入     
+			           "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数     
+			           "nonceStr" : nonceStr, //随机串     
+			           "package" : "prepay_id="+prepareid,     
+			           "signType" : "MD5",         //微信签名方式：     
+			           "paySign" : paysign //微信签名 
+			       },function(res){ 
+			           if(res.err_msg == "get_brand_wcpay_request：ok" ) {
+			           		alert("seccess");
+			           } 
+			       }
+			   ); 
+			}
+			
+			
+		</script>

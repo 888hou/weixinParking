@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>注册</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/register.css" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<form id='register-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label>手机号</label>
+					<input id="regPhone" type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="11" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id="next" class="mui-btn mui-btn-block mui-btn-primary">下一步</button>
+				<p style="display: none;">继续操作即视为已阅读并同意<a href="user-agreement.html">《用户协议》</a></p>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto_1.1.3.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+			mui.init();
+			$(function() {
+				var action = GetQueryString("action");
+				//根据调取页面动作判断是找回密码还是注册
+				if (action == 'forget') {
+					$('title').html('找回密码');
+				} else {
+					$('.mui-content-padded p').show();
+				}
+				$('#next').on('tap',function() {
+					var phone = $('#regPhone').val();
+					if(checkPhoneNum(phone)) {
+						checkReg(phone,action);
+					}
+				})
+				
+				
+				
+			})
+
+
+			//检测手机号是否注册过
+			function checkReg(phone,action) {
+				$.post(basePath+'pub/exist.do',{
+					loginname: phone
+				},function (res) {
+					if (res.errno == '200') {
+						if (res.data.exist == 1) {
+							if (action == 'forget') {
+								sendCode(phone,action);
+								return;
+							}
+							mui.toast('该手机号已经注册，请直接登录');
+						} else {
+							if (action == 'forget') {
+								mui.toast('该手机号尚未注册，请注册后直接登录');
+								return;
+							}
+							sendCode(phone,action);
+						}
+					} else {
+						mui.toast('错误：'+res.errtext);
+					}
+				})
+			}
+			//发送手机验证码
+			function sendCode(phone,action) {
+				$.post(basePath+'sms/send.do',{
+					phone: phone
+				},function (res) {
+					if (res.errno == '200') {
+						setCookie("tempPhone",phone,'s300');
+						mui.openWindow({
+							url: 'register2.html?action='+action,
+							id: 'register2.html',
+						})
+					} else {
+						mui.toast(res.errtext);
+					}
+				})
+			}
+			
+		</script>
+	</body>
+</html>

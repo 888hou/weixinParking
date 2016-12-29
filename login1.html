@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登录</title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/login.css" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						密码登录
+					</a>
+					<a class="mui-control-item" href="#item2">
+						手机登录
+					</a>
+				</div>
+			</div>
+			<div>
+				<div id="item1" class="mui-control-content mui-active">
+					<div class="mui-content">
+						<form id='login-form' class="mui-input-group">
+							<input id='account0' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+							<input id='password0' type="password" class="mui-input-clear mui-input" placeholder="请输入账号密码">
+						</form>
+						<p class="agreement">登录即默认您已阅读并同意<a href="user-agreement.html">《用户协议》</a></p>
+						<div class="mui-content-padded">
+							<button onclick="pslogin()" id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+						</div>
+					</div>	
+				</div>
+				
+				<div id="item2" class="mui-control-content">
+					<div class="mui-content">
+						<form id='login-form' class="mui-input-group">
+							<div class="phone-input">
+								<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+								<button type="button" class="mui-btn mui-btn-outlined get-code">获取验证码</button>
+							</div>
+							<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入短信中的验证码">
+						</form>
+						<p class="agreement">登录即默认您已阅读并同意<a href="user-agreement.html">《用户协议》</a></p>
+						<div class="mui-content-padded">
+							<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+						</div>
+					</div>	
+				</div>
+			</div>
+			<script src="js/jquery-1.11.3.js"></script>
+			<script src="js/login.js"></script>
+	</body>
+
+</html>

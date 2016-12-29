@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>个人中心</title>
+		<script src="../js/zepto_1.1.3.js"></script>
+		<script src="../js/base.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/login.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/personalInfo.css"/>
+	</head>
+		
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">个人信息</h1>
+			<button onclick="saveInfo()" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right save-info">保存</button>
+		</header>
+		<div class="container mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+			        <a id="head" class="mui-navigate-right">
+			        	<span class="h-text">头像</span>
+						<span class="mui-pull-right head">
+							<img class="head-img mui-action-preview" id="head-img1" src="../imgs/portrait.png">
+						</span>
+					</a>
+			    </li>
+			</ul>
+			
+			<ul class="mui-table-view info-detail">
+		        <li class="mui-table-view-cell">
+		                             昵称
+		            <input type="text" name="nickname" id="nickname" class="mui-pull-right info-input" placeholder="修改昵称"/>
+		        </li>
+		        <li class="mui-table-view-cell sexy">
+		                             性别
+		            <div class="mui-pull-right">
+		            	<label value="1" for="male" class="sexy-item active"><span class="sexy-dot"></span>先生</label>
+		            	<label value="0" for="female" class="sexy-item"><span class="sexy-dot"></span>女士</label>
+		            </div>
+		        </li>
+		        <li class="mui-table-view-cell">
+		                              手机号
+		            <input type="text" name="phoneno" id="phoneno" readonly="readonly" value="18735610165" class="mui-pull-right info-input"/>
+		        </li>
+		   </ul>
+		   
+		   <!--头像选取底部弹出框-->
+		   <div id="picture" class="mui-popover mui-popover-action mui-popover-bottom" style="display: none;">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#" id="takePhoto">拍照</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#">从相册选取</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#picture"><b>取消</b></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.11.3.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+		<script src="../js/personalInfo.js"></script>
+		<script>
+			$(function(){
+				setHtml();
+			});
+			
+			function setHtml(){
+				var user = getUserInfo();
+				var html = '<h1 class="mui-subtitle">'+user.name+'</h1>'+
+					   '<p>账号:&nbsp;<span class="p-account">'+user.loginname+'</span></p>';
+				$("#nickname").val(sessionStorage.name);
+				$("#phoneno").val(sessionStorage.loginname);
+				if(user.gender==0){
+					$("[for='female']").addClass("active");		
+					$("[for='male']").removeClass("active");	
+				}else{
+					$("[class='sexy-item'][for='male']").addClass("active");		
+					$("[class='sexy-item'][for='female']").removeClass("active");
+				}
+				
+			}
+			
+			function saveInfo(){
+				var name = $("#nickname").val();
+				var gender = $("[class='sexy-item active']").attr("value");
+				$.ajax({
+			        url: basePath+"user/editProfile.do",
+			        type: 'post',
+			        async: true,
+			        data: { "name":name,"gender":gender},
+			        success: function (ResultData) {
+			        	if(ResultData.errno=="200"){
+			        		sessionStorage.name = name;
+			        		mui.toast("保存成功");  
+			            }else{
+			            	mui.toast(ResultData.errtext);  
+			            }
+			        }
+			    });
+			}
+		</script>
+	</body>
+</html>

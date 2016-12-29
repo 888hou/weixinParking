@@ -1,0 +1,119 @@
+.area {
+	margin: 20px auto 0px auto;
+}
+
+.mui-input-group {
+	margin-top: 10px;
+	
+}
+
+.mui-input-row{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.mui-input-row label~input{
+	flex: 1;
+}
+
+.mui-input-group:first-child {
+	margin-top: 20px;
+}
+
+.mui-checkbox input[type=checkbox],
+.mui-radio input[type=radio] {
+	top: 6px;
+}
+
+.mui-content-padded {
+	margin-top: 25px;
+}
+
+.mui-content-padded p{
+	text-align: center;
+	color: #000;
+	font-size: 16px;
+	margin-top: 15px;
+}
+
+.mui-btn {
+	padding: 10px;
+}
+
+.link-area {
+	display: block;
+	margin-top: 25px;
+	text-align: center;
+}
+
+.spliter {
+	color: #bbb;
+	padding: 0px 8px;
+}
+
+.get-checkCode{
+	border: none;
+	border-radius: 0;
+	border-left: 1px solid #ccc;
+	padding: 1px 6px;
+}
+
+.code-text{
+	text-align: center;
+	font-weight: normal;
+	font-size: 16px;
+	padding: 10px 0px;
+}
+
+.phone-num{
+	text-align: center;
+	font-size: 20px;
+	margin-top: 10px;
+}
+
+.sexy-reg{
+	display: block;
+	padding-right: 20px;
+}
+
+.sexy-item{
+	position: relative;
+	margin-left: 10px;
+	color: #888;
+}
+
+.sexy-dot{
+	position: absolute;
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 5px;
+	background-color: #888;
+	left: -10px;
+	top:0;
+	bottom:0;
+	right: 0;
+	margin:auto 0;
+}
+
+.sexy .active{
+	color: #000;
+}
+
+.sexy .active .sexy-dot{
+	background-color: orange;
+}
+
+.sexy label{
+	padding-left: 3px;
+}
+
+.per-info{
+	display: none;
+}
+
+.goon{
+	display: none;
+}
